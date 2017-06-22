@@ -1,4 +1,5 @@
 ## 选择排序
+每次选择剩余元素中最小的放到数组左边
 ```java
 public class Selection {
     public static void sort(Comparable[] a) {
@@ -27,6 +28,7 @@ public class Selection {
 2. 数据移动是**最少**的
 
 ## 插入排序
+将当前元素与其左边所有元素进行比较，如果比左边元素小，则交换位置。插入排序保证当前索引左边的元素是有序的。
 ```java
 public class Insertion {
     public static void sort(Comparable[] a) {
@@ -48,6 +50,9 @@ public class Insertion {
 插入排序先找出最小元素置于数组的最左边，可以省略内循环j>0的条件
 
 ## 希尔排序
+基于插入排序的快速的排序算法，思想是使数组中任意间隔为h的元素都是有序的
+
+交换不相邻的元素以对数组的局部进行排序，并最终用插入排序将局部有序的数组排序
 ```java
 public class Shell {
     public static void sort(Comparable[] a) {
@@ -68,3 +73,6 @@ public class Shell {
 }
 
 ```
+数组规模大时，shell比插入排序快的多
+
+## 归并排序

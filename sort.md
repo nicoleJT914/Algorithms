@@ -32,10 +32,8 @@ public class Insertion {
     public static void sort(Comparable[] a) {
         int N = a.length;
         for (int i=1; i<N; i++) {
-            for (int j=i; j>0; j--) { // 注意边界条件是>0，不是>=0!
-                if (a[j].compareTo(a[j-1]) < 0) {
-                    exch(a, j, j-1);
-                }
+            for (int j=i; j>0 && (a[j].compareTo(a[j-1]) < 0); j--) {
+                exch(a, j, j-1);
             }
         }
     }
@@ -47,4 +45,26 @@ public class Insertion {
 
 插入排序对部分有序的数组十分高效，也很适合小规模数组
 
-插入排序
+插入排序先找出最小元素置于数组的最左边，可以省略内循环j>0的条件
+
+## 希尔排序
+```java
+public class Shell {
+    public static void sort(Comparable[] a) {
+        int N = a.length;
+        int h = 1;
+        while (h < N/3) {
+            h = 3*h + 1;
+        }
+        while (h >= 1) {
+            for (int i=h; i<N; i++) {
+                for (int j=i; j>=h && (a[j].compareTo(a[j-h]) < 0); j -= h) {
+                    exch(a, j, j-h);
+                }
+            }
+            h /= 3;
+        }
+    }
+}
+
+```

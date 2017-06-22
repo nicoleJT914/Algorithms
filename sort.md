@@ -76,3 +76,113 @@ public class Shell {
 数组规模大时，shell比插入排序快的多
 
 ## 归并排序
+将两个有序的数组归并为一个更大的有序数组，用归并操作进行递归
+
+- 自顶向下的归并排序
+
+每次归并前将待归并元素复制到aux数组中，需要额外空间
+```java
+public class Merge {
+    private static Comparable[] aux;
+    public static void main(String[] args) {
+        String[] a = {"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
+        sort(a);
+        show(a);
+    }
+    public static void sort(Comparable[] a) {
+        aux = new Comparable[a.length];
+        sort(a, 0, a.length-1);
+    }
+    private static void sort(Comparable[] a, int lo, int hi) {
+        if (hi <= lo)
+            return;
+        int mid = lo+(hi-lo)/2;
+        sort(a, lo, mid);
+        sort(a, mid+1, hi);
+        merge(a, lo, mid, hi);
+    }
+    public static void merge(Comparable[] a, int lo, int mid, int hi) {
+        int i = lo, j = mid+1;
+        for (int k=lo; k<=hi; k++) {
+            aux[k] = a[k];
+        }
+        for (int k=lo; k<=hi; k++) {
+            if (i > mid)
+                a[k] = aux[j++];
+            else if (j > hi)
+                a[k] = aux[i++];
+            else if (less(aux[j], aux[i]))
+                a[k] = aux[j++];
+            else
+                a[k] = aux[i++];
+        }
+    }
+    private static boolean less(Comparable v, Comparable w) {
+        return v.compareTo(w) < 0;
+    }
+    private static void show (Comparable[] a) {
+        for (int i=0;i< a.length;i++) {
+            System.out.print(a[i] + " ");
+        }
+        System.out.println();
+    }
+}
+```
+归并排序所需的时间和NlgN成正比
+
+缺点是辅助数组所使用的额外空间和N的大小成正比
+
+改进：
+1. 对小规模数组使用插入排序：递归对于小规模问题方法调用过于频繁
+2. 测试数组是否已经有序：归并前，判断a[mid]<=a[mid+1]。此操作可将有序数组的运行时间变为线性
+3. 不将元素复制到辅助数组：空间不可以！每次递归调用前交换数组和辅助数组的角色
+
+- 自底向上的归并排序
+
+从小粒度开始归并：1&1归并 ==> 2&2归并 ==> 4&4归并 ==> ...
+```java
+public class MergeBU {
+    private static Comparable[] aux;
+    public static void main(String[] args) {
+        String[] a = {"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
+        sort(a);
+        show(a);
+    }
+    public static void sort(Comparable[] a) {
+        int N = a.length;
+        aux = new Comparable[a.length];
+        for (int sz=1; sz<N; sz *= 2) {
+            for (int lo=0; lo<N-sz; lo += sz*2) {
+                merge(a, lo, lo+sz-1, Math.min(lo+sz*2-1, N-1));
+            }
+        }
+    }
+    public static void merge(Comparable[] a, int lo, int mid, int hi) {
+        int i = lo, j = mid+1;
+        for (int k=lo; k<=hi; k++) {
+            aux[k] = a[k];
+        }
+        for (int k=lo; k<=hi; k++) {
+            if (i > mid)
+                a[k] = aux[j++];
+            else if (j > hi)
+                a[k] = aux[i++];
+            else if (less(aux[j], aux[i]))
+                a[k] = aux[j++];
+            else
+                a[k] = aux[i++];
+        }
+    }
+    private static boolean less(Comparable v, Comparable w) {
+        return v.compareTo(w) < 0;
+    }
+    private static void show (Comparable[] a) {
+        for (int i=0;i< a.length;i++) {
+            System.out.print(a[i] + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+归并排序是一种渐进最优的基于比较排序的算法。

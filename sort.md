@@ -188,3 +188,54 @@ public class MergeBU {
 归并排序是一种渐进最优的基于比较排序的算法。
 
 ## 快速排序
+
+切分的关键：
+1. 对于切分j, a[j]已经排定
+2. a[lo]到a[j-1]中的所有元素都不大于a[j]
+3. a[j+1]到a[hi]中的所有元素都不小于a[j]
+
+```java
+public class Quick {
+    public static void sort(Comparable[] a) {
+        // StdRnadom.shuffle(a);
+        sort(a, 0 ,a.length-1);
+    }
+    private static void sort(Comparable[] a, int lo, int hi) {
+        if (hi <= lo)
+            return;
+        int j = partition(a, lo, hi);
+        sort(a, lo, j-1);
+        sort(a, j+1, hi);
+    }
+    private static int partition(Comparable[] a, int lo, int hi) {
+        int i = lo, j = hi+1;
+        Comparable v = a[lo];
+        while (true) {
+            while (less(a[++i], v)) {
+                if (i == hi)
+                    break;
+            }
+            while (less(v, a[--j])) {
+                if (j == lo)
+                    break;
+            }
+            if (i >= j)
+                break;
+            exch(a, i,  j);
+        }
+        exch(a, lo, j);
+        return j;
+    }
+}
+
+```
+
+快速排序的特点：
+1. 原地排序（只需要很小的辅助栈）
+2. 对长度为N的数组排序所需时间和NlgN成正比
+
+和归并排序的区别：
+1. 归并排序递归调用发生在处理整个数组之前
+2. 快速排序递归调用发生在处理整个数组之后
+
+
